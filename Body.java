@@ -6,6 +6,7 @@ public class Body extends GameObject{
     public double bounce = 0;
     public final boolean isStatic;
 
+
     Body(Display display, CollisionShape shape, boolean isStatic) {
         super();
         this.display = display;
@@ -32,7 +33,7 @@ public class Body extends GameObject{
     @Override
     public void frameUpdate(double delta) {
         
-        setVelocity(velocity.add(new Vec2(0, 2)));
+        setVelocity(velocity.add(new Vec2(0, 100).mul(delta)));
 
         checkCollisions(delta);
         
@@ -53,7 +54,10 @@ public class Body extends GameObject{
             
             if (colData.didCollide) {
                 setLocalPos(localPos.add(colData.normal.mul(colData.penetrationDepth)));
-                setVelocity(velocity.add(colData.normal.mul(velocity.getLength())));
+
+                double relativeVelocity = velocity.normalized().mul(colData.normal).getLength();
+
+                setVelocity(velocity.add(colData.normal.mul(relativeVelocity * (1.0 + bounce))));
             }
 
 

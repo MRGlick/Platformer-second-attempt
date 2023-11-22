@@ -1,5 +1,11 @@
 import java.awt.Color;
+import java.awt.MouseInfo;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JFrame;
 
@@ -12,6 +18,23 @@ public class Main {
     public static JFrame frame;
     public static ArrayList<GameObject> gameObjects = new ArrayList<>();
     public static DrawPanel drawPanel = new DrawPanel();
+    public static final Vec2 TILE_SIZE = new Vec2(80, 80);
+    public static final Color TILE_COLOR = new Color(230, 200, 150);
+    public static Map<Vec2, Body> placedTiles = new HashMap<>();
+    public static boolean isMousePressed = false;
+
+    public static void placeBlock(Vec2 position) {
+        Vec2 tilePos = (position.divide(TILE_SIZE).floor().mul(TILE_SIZE));
+        if (placedTiles.containsKey(tilePos)) return;
+        Body block = new Body(
+            new RectDisplay(TILE_SIZE, TILE_COLOR),
+            new RectShape(TILE_SIZE),
+            true
+        );
+        block.setGlobalPos(tilePos);
+        block.addToScene();
+        placedTiles.put(tilePos, block);
+    }
 
     public static void addObject(GameObject obj) {
         gameObjects.add(obj);
@@ -20,7 +43,7 @@ public class Main {
     public static void main(String[] args) {
 
         // replace with variables
-        game = new Game(60, 60);
+        game = new Game(120, 120);
 
         frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,10 +56,21 @@ public class Main {
         drawPanel.bgColor = new Color(20, 20, 20);
         
         
+        MouseListener mouseListener = new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                isMousePressed = true;
+            }
+            public void mouseReleased(MouseEvent e) {
+                isMousePressed = false;
+            }
+        };
         
-        
+        frame.addMouseListener(mouseListener);
 
         game.setTickFunction((d) -> {
+            if (isMousePressed) {
+                placeBlock(new Vec2(MouseInfo.getPointerInfo().getLocation()));
+            }
             for(GameObject obj : gameObjects) {
                 obj.frameUpdate(d);
             }
@@ -69,6 +103,8 @@ public class Main {
         testStaticBody.setGlobalPos(new Vec2(120, 300));
 
         testBody.velocity = new Vec2(50, 50);
+
+        testBody.addToScene();
 
         // add stuff
 

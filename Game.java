@@ -2,8 +2,6 @@
 // How to use: Create an instance of the 'game' class inside of the project
 // start the loops only at the END of the main method
 
-import java.util.concurrent.TimeUnit;
-
 @FunctionalInterface
 interface Func {
     void apply(double delta);

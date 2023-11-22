@@ -35,6 +35,18 @@ public class Vec2 {
     public Vec2 divide(double by){
         return new Vec2(x / by, y / by);
     }
+    public Vec2 divide(Vec2 by) {
+        return new Vec2(x / by.x, y / by.y);
+    }
+    @Override
+    public String toString(){
+        return "Vec2(" + x + ", " + y + ")";
+    }
+    
+    
+    public boolean equals(Vec2 v) {
+        return x == v.x && y == v.y;
+    }
 
     public Vec2 floor() {
         return new Vec2(Math.floor(x), Math.floor(y));
@@ -43,11 +55,14 @@ public class Vec2 {
     public Vec2 mul(double by){
         return new Vec2(x * by, y * by);
     }
+    public Vec2 mul(Vec2 by) {
+        return new Vec2(x * by.x, y * by.y);
+    }
     public Vec2 add(Vec2 vector){
         return new Vec2(vector.x + this.x, vector.y + this.y);
     }
     public Vec2 sub(Vec2 vector){
-        return new Vec2(this.x - vector.x, this.y - vector.x);
+        return new Vec2(this.x - vector.x, this.y - vector.y);
     }
 
     public double getLength(){
@@ -76,6 +91,9 @@ public class Vec2 {
 
     public double distanceTo(Vec2 pos) {
         return Math.sqrt((x - pos.x) * (x - pos.x) + (y - pos.y) * (y - pos.y));
+    }
+    public Vec2 directionTo(Vec2 pos) {
+        return (pos.sub(this)).normalized();
     }
 
 }

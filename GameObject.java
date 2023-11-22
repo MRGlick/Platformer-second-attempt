@@ -5,9 +5,10 @@ abstract public class GameObject {
     public Vec2 globalPos, localPos;
     public ArrayList<GameObject> children = new ArrayList<>();
     public GameObject parent = null;
+    public boolean inScene = false;
 
     GameObject() {
-        addToScene();
+
         setLocalPos(new Vec2());
     }
 
@@ -46,7 +47,11 @@ abstract public class GameObject {
 
     public void frameUpdate(double delta){}
 
-    private void addToScene() {
+    public void addToScene() {
         Main.addObject(this);
+        inScene = true;
+        for (GameObject child : children) {
+            child.addToScene();
+        }
     }
 }
