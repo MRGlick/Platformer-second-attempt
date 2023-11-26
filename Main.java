@@ -5,7 +5,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JFrame;
 
@@ -20,12 +19,15 @@ public class Main {
     public static DrawPanel drawPanel = new DrawPanel();
     public static final Vec2 TILE_SIZE = new Vec2(80, 80);
     public static final Color TILE_COLOR = new Color(230, 200, 150);
-    public static Map<Vec2, Body> placedTiles = new HashMap<>();
-    public static boolean isMousePressed = false;
+    public static HashMap<Vec2, Body> placedTiles = new HashMap<>();
+    public static boolean isLMousePressed = false;
+    public static boolean isRMousePressed = false;
 
     public static void placeBlock(Vec2 position) {
         Vec2 tilePos = (position.divide(TILE_SIZE).floor().mul(TILE_SIZE));
-        if (placedTiles.containsKey(tilePos)) return;
+        for (Vec2 key : placedTiles.keySet()) {
+            if (key.equals(tilePos)) return;
+        }
         Body block = new Body(
             new RectDisplay(TILE_SIZE, TILE_COLOR),
             new RectShape(TILE_SIZE),
@@ -36,8 +38,29 @@ public class Main {
         placedTiles.put(tilePos, block);
     }
 
+    public static void removeBlock(Vec2 position) {
+        Vec2 tilePos = (position.divide(TILE_SIZE).floor().mul(TILE_SIZE));
+        
+        for (Vec2 key : placedTiles.keySet()) {
+            if (key.equals(tilePos)) {
+                Body block;
+                (block = placedTiles.get(key)).destroy();
+                placedTiles.remove(key);
+                break;
+            }
+        }
+        
+        
+        
+        
+        
+    }
+
     public static void addObject(GameObject obj) {
         gameObjects.add(obj);
+    }
+    public static void removeObject(GameObject obj) {
+        gameObjects.remove(obj);
     }
 
     public static void main(String[] args) {
@@ -58,18 +81,30 @@ public class Main {
         
         MouseListener mouseListener = new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                isMousePressed = true;
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    isLMousePressed = true;
+                }
+                else if (e.getButton() == MouseEvent.BUTTON3) {
+                    isRMousePressed = true;
+                }
             }
             public void mouseReleased(MouseEvent e) {
-                isMousePressed = false;
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    isLMousePressed = false;
+                }
+                else if (e.getButton() == MouseEvent.BUTTON3) {
+                    isRMousePressed = false;
+                }
             }
         };
         
         frame.addMouseListener(mouseListener);
 
         game.setTickFunction((d) -> {
-            if (isMousePressed) {
-                placeBlock(new Vec2(MouseInfo.getPointerInfo().getLocation()));
+            if (isLMousePressed) {
+                placeBlock(new Vec2(MouseInfo.getPointerInfo().getLocation()).add(new Vec2(0, TILE_SIZE.y/-2)));
+            } else if (isRMousePressed) {
+                removeBlock(new Vec2(MouseInfo.getPointerInfo().getLocation()).add(new Vec2(0, TILE_SIZE.y/-2)));
             }
             for(GameObject obj : gameObjects) {
                 obj.frameUpdate(d);
@@ -96,7 +131,7 @@ public class Main {
 
         RectShape testShape = new RectShape(new Vec2(50, 50));
 
-        Body testBody = new Body(testDisplay, testShape, false);
+        Body testBody = new Player(testDisplay, testShape);
 
         Body testStaticBody = new Body(new RectDisplay(new Vec2(500,50), Color.BLUE)
         , new RectShape(new Vec2(500, 50)), true);

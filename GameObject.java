@@ -54,4 +54,11 @@ abstract public class GameObject {
             child.addToScene();
         }
     }
+    public void destroy() {
+        Main.removeObject(this);
+        inScene = false;
+        for (GameObject child : children) {
+            child.destroy();
+        }
+    }
 }

@@ -58,7 +58,7 @@ class RectShape extends CollisionShape {
         if (shape.TYPE == CollisionShape.TYPE_RECT) {
             return collideRect((RectShape)shape);
         }
-
+        System.out.println("bruh");
         return new CollisionData();
     }
 
@@ -76,7 +76,9 @@ class RectShape extends CollisionShape {
 
     private CollisionData collideRect(RectShape shape) {
 
-        if (isStatic) return new CollisionData();
+        if (isStatic) {
+            return new CollisionData();
+        }
 
         CollisionData result = new CollisionData();
 
@@ -87,9 +89,9 @@ class RectShape extends CollisionShape {
         || numInRange(shape.globalPos.y, globalPos.y, globalPos.y + size.y))
         ) result.didCollide = true;
 
+        
         // find normal
         if (result.didCollide) {
-            
             result.normal = new Vec2();
             
             Vec2 center = globalPos.add(size.divide(2));
@@ -132,9 +134,6 @@ class RectShape extends CollisionShape {
             else if (result.normal.equals(new Vec2(-1, 0))) result.penetrationDepth = (globalPos.x + size.x) - shape.globalPos.x;
             else if (result.normal.equals(new Vec2(0, 1))) result.penetrationDepth = (shape.globalPos.y + shape.size.y) - globalPos.y;
             else result.penetrationDepth = (globalPos.y + size.y) - shape.globalPos.y;
-            if (!isStatic) {
-                if (result.normal.y == 0) System.out.println("Collided with wall.");
-            }
             
         }
 

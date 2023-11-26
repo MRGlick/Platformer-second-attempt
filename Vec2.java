@@ -43,8 +43,10 @@ public class Vec2 {
         return "Vec2(" + x + ", " + y + ")";
     }
     
-    
-    public boolean equals(Vec2 v) {
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Vec2)) return false;
+        Vec2 v = (Vec2)o;
         return x == v.x && y == v.y;
     }
 
