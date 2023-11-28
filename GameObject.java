@@ -6,6 +6,7 @@ abstract public class GameObject {
     public ArrayList<GameObject> children = new ArrayList<>();
     public GameObject parent = null;
     public boolean inScene = false;
+    public Scene scene;
 
     GameObject() {
 
@@ -47,18 +48,13 @@ abstract public class GameObject {
 
     public void frameUpdate(double delta){}
 
-    public void addToScene() {
-        Main.addObject(this);
-        inScene = true;
-        for (GameObject child : children) {
-            child.addToScene();
-        }
-    }
+    
     public void destroy() {
-        Main.removeObject(this);
+        scene.removeObject(this);
         inScene = false;
         for (GameObject child : children) {
             child.destroy();
         }
+        scene = null;
     }
 }

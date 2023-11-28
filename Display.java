@@ -6,6 +6,7 @@ import java.awt.Graphics;
 abstract public class Display extends GameObject{
 
     protected boolean isVisible = false;
+    public Color color;
 
     public void draw(Graphics g) {}
 
@@ -15,6 +16,10 @@ abstract public class Display extends GameObject{
         };
     }
 
+    public void setColor(Color c) {
+        color = c;
+    }
+
 }
 
 
@@ -22,16 +27,17 @@ class RectDisplay extends Display {
 
     public DrawRect displayRect;
     public Vec2 size;
-    public Color color;
+    
     
 
     RectDisplay(Vec2 size, Color color) {
         this.size = size;
-        displayRect = new DrawRect(globalPos, size);
+        displayRect = new DrawRect(globalPos.sub(scene.cameraPos), size);
+        setColor(color);
     }
 
     
-
+    @Override
     public void setColor(Color c) {
         color = c;
         displayRect.color = c;
@@ -44,6 +50,6 @@ class RectDisplay extends Display {
     
     @Override public void updatePos() {
         super.updatePos();
-        displayRect.position = globalPos;
+        displayRect.position = globalPos.sub(scene.cameraPos);
     }
 }
