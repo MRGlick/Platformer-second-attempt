@@ -4,7 +4,7 @@ public class Scene {
 
     public ArrayList<GameObject> gameObjects = new ArrayList<>();
     public Vec2 cameraPos = new Vec2();
-    private Func startFunc, updateFunc;
+    private Func startFunc = (d) -> {}, updateFunc = (d) -> {};
 
     Scene() {
         start();
@@ -31,9 +31,15 @@ public class Scene {
 
     public void addObject(GameObject obj) {
         gameObjects.add(obj);
+        for (GameObject child : obj.children) {
+            addObject(child);
+        }
         obj.scene = this;
     }
     public void removeObject(GameObject obj) {
         gameObjects.remove(obj);
+        for (GameObject child : obj.children) {
+            removeObject(child);
+        }
     }
 }

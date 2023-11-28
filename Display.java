@@ -32,7 +32,8 @@ class RectDisplay extends Display {
 
     RectDisplay(Vec2 size, Color color) {
         this.size = size;
-        displayRect = new DrawRect(globalPos.sub(scene.cameraPos), size);
+        Vec2 cameraPos = scene != null ? scene.cameraPos : Vec2.ZERO;
+        displayRect = new DrawRect(globalPos.sub(cameraPos), size);
         setColor(color);
     }
 
@@ -50,6 +51,7 @@ class RectDisplay extends Display {
     
     @Override public void updatePos() {
         super.updatePos();
-        displayRect.position = globalPos.sub(scene.cameraPos);
+        Vec2 cameraPos = scene != null ? scene.cameraPos : Vec2.ZERO;
+        displayRect.position = globalPos.sub(cameraPos);
     }
 }

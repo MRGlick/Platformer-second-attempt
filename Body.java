@@ -48,8 +48,8 @@ public class Body extends GameObject{
 
         setLocalPos(localPos.add(velocity.mul(delta)));
         isOnFloor = false;
-
-        for (GameObject obj : Main.gameObjects) {
+        if (scene == null) return;
+        for (GameObject obj : scene.gameObjects) {
             if (obj.equals(this) || !(obj instanceof Body)) 
                 continue;
             

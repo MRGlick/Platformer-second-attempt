@@ -1,7 +1,5 @@
 import java.awt.Color;
 
-import java.util.ArrayList;
-
 import javax.swing.JFrame;
 
 
@@ -11,7 +9,6 @@ public class Main {
 
     public static Game game;
     public static JFrame frame;
-    public static ArrayList<GameObject> gameObjects = new ArrayList<>();
     public static DrawPanel drawPanel = new DrawPanel();
     public static final Vec2 TILE_SIZE = new Vec2(80, 80);
     public static final Color TILE_COLOR = new Color(230, 200, 150);
